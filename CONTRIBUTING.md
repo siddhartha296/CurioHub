@@ -139,6 +139,8 @@ Open your browser at [http://localhost:3000](http://localhost:3000) to see the a
 
 ## 6. Contribute
 
+-->fork the repository and create a pull request if a simple issue .
+
 1. Create a new branch for your feature:
 
 ```bash
@@ -164,6 +166,3 @@ Thank you for helping build CurioHub! 🚀
 
 ```
 
-
-Do you want me to do that?
-```
