@@ -1,11 +1,11 @@
 
-````markdown
+
 # Contributing to CurioHub
 
 Thanks for your interest in contributing! CurioHub is an open-source, community-curated discovery platform. This guide will help you set up the project locally and get started with development.
 
----
 
+````markdown
 ## 1. Clone the Repository
 
 ```bash
