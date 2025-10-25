@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
+// import { createClient } from "@/lib/supabase/component";
 import { redirect } from "next/navigation";
 import SubmitForm from "@/components/content/SubmitForm";
 
 export default async function SubmitPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const {
     data: { user },

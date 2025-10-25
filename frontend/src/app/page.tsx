@@ -1,7 +1,8 @@
-import { createClient } from "@/lib/supabase/server";
+// import { createClient } from "@/lib/supabase/server";
 import ContentGrid from "@/components/content/ContentGrid";
 import SourceFilter from "@/components/filters/SourceFilter";
 import TagFilter from "@/components/filters/TagFilter";
+import { createClient } from "@/lib/supabase/component";
 
 export default async function Home() {
   const supabase = createClient();

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowUp, Bookmark, ExternalLink, Tag } from "lucide-react";
-import { supabase } from "@/lib/supabase/client";
+// import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/component";
 
 interface ContentCardProps {
   submission: any;
@@ -14,9 +15,10 @@ export default function ContentCard({
   submission,
   showVoting = false,
 }: ContentCardProps) {
-  const [upvotes, setUpvotes] = useState(submission.upvotes || 0);
+  const [upvotes, setUpvotes] = useState<number>(submission.upvotes || 0);
   const [hasVoted, setHasVoted] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const supabase = createClient();
 
   const handleVote = async () => {
     const {
@@ -91,11 +93,10 @@ export default function ContentCard({
             <button
               onClick={handleVote}
               disabled={hasVoted}
-              className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
-                hasVoted
-                  ? "bg-blue-100 text-blue-600"
-                  : "hover:bg-gray-100 text-gray-600"
-              }`}
+              className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${hasVoted
+                ? "bg-blue-100 text-blue-600"
+                : "hover:bg-gray-100 text-gray-600"
+                }`}
             >
               <ArrowUp className="w-5 h-5" />
               <span className="text-xs font-medium">{upvotes}</span>
@@ -147,11 +148,10 @@ export default function ContentCard({
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleBookmark}
-                  className={`p-2 rounded-lg transition-colors ${
-                    isBookmarked
-                      ? "bg-yellow-100 text-yellow-600"
-                      : "hover:bg-gray-100 text-gray-600"
-                  }`}
+                  className={`p-2 rounded-lg transition-colors ${isBookmarked
+                    ? "bg-yellow-100 text-yellow-600"
+                    : "hover:bg-gray-100 text-gray-600"
+                    }`}
                 >
                   <Bookmark
                     className={`w-4 h-4 ${isBookmarked ? "fill-current" : ""}`}

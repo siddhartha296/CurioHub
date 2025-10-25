@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/component";
+// import { supabase } from "@/lib/supabase/client";
 import { Loader2 } from "lucide-react";
 
 export default function LoginForm() {
   const router = useRouter();
+  const supabase = createClient();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({

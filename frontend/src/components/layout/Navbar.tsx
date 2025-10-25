@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/component";
+// import { supabase } from "@/lib/supabase/client";
 import { User, LogOut, Menu, X, Plus, Compass } from "lucide-react";
 
 export default function Navbar() {
+  const supabase = createClient();
   const [user, setUser] = useState<any>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -57,11 +59,10 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                  pathname === link.href
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${pathname === link.href
                     ? "bg-blue-50 text-blue-600 font-medium"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 {typeof link.icon === "string" ? link.icon : link.icon}
                 {link.label}
@@ -133,11 +134,10 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
-                    pathname === link.href
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg ${pathname === link.href
                       ? "bg-blue-50 text-blue-600 font-medium"
                       : "text-gray-600"
-                  }`}
+                    }`}
                 >
                   {typeof link.icon === "string" ? link.icon : link.icon}
                   {link.label}

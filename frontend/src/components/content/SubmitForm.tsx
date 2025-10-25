@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase/client";
+// import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/component";
 import { SOURCE_TYPES, TAGS } from "@/lib/constants";
 import { Loader2 } from "lucide-react";
 
 export default function SubmitForm() {
+  const supabase = createClient();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -172,11 +174,10 @@ export default function SubmitForm() {
               key={tag}
               type="button"
               onClick={() => toggleTag(tag)}
-              className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                formData.tags.includes(tag)
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
+              className={`px-3 py-1 rounded-full text-sm transition-colors ${formData.tags.includes(tag)
+                ? "bg-blue-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
             >
               {tag}
             </button>
