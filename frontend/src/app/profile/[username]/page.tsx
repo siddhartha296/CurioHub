@@ -1,85 +1,42 @@
-import { createClient } from "@/lib/supabase/component";
-// import { createClient } from "@/lib/supabase/server";
-import { notFound } from "next/navigation";
-import ContentGrid from "@/components/content/ContentGrid";
-import { User, Calendar, Bookmark } from "lucide-react";
+'use client'; // For App Router
 
-export default async function ProfilePage({
-  params,
-}: {
-  params: Promise<{ username: string }>;
-}) {
-  const supabase = createClient();
-  const { username } = await params;
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';  
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; // shadcn/ui
+import { Button } from '@/components/ui/button';
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("username", username)
-    .single();
+export default function ProfilePage() {
+  const { user, loading, signOut } = useAuth();
+  const router = useRouter();
 
-  if (!profile) {
-    notFound();
-  }
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login'); // Or '/' if no login page
+    }
+  }, [user, loading, router]);
 
-  const { data: submissions } = await supabase
-    .from("submissions")
-    .select(
-      `
-      *,
-      submission_tags (
-        tags (name, slug)
-      )
-    `
-    )
-    .eq("user_id", profile.id)
-    .eq("status", "approved")
-    .order("created_at", { ascending: false });
+  if (loading) return <div>Loading...</div>;
+  if (!user) return null; // Redirect handled above
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Profile Header */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-        <div className="flex items-start gap-6">
-          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">
-            {profile.display_name?.[0] || profile.username[0].toUpperCase()}
+    <div className="container mx-auto p-4">
+      <Card className="max-w-md mx-auto">
+        <CardHeader>
+          <CardTitle>Your Profile</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>User ID:</strong> {user.id}</p>
+          {/* Placeholder for Library – fetch from Supabase later */}
+          <div>
+            <h3 className="font-semibold">Your Library (Saved Content)</h3>
+            <p className="text-muted-foreground">No items yet. Start saving from the feed!</p>
+            {/* Future: Map over user saves from DB */}
           </div>
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {profile.display_name || profile.username}
-            </h1>
-            <p className="text-gray-600 mb-4">@{profile.username}</p>
-            {profile.bio && <p className="text-gray-700 mb-4">{profile.bio}</p>}
-            <div className="flex items-center gap-6 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                Joined{" "}
-                {new Date(profile.created_at).toLocaleDateString("en-US", {
-                  month: "long",
-                  year: "numeric",
-                })}
-              </div>
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4" />
-                {submissions?.length || 0} submissions
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* User's Submissions */}
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Submissions</h2>
-        {submissions && submissions.length > 0 ? (
-          <ContentGrid submissions={submissions} />
-        ) : (
-          <div className="text-center py-16 bg-gray-50 rounded-lg">
-            <Bookmark className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">No submissions yet</p>
-          </div>
-        )}
-      </div>
+          <Button onClick={signOut} variant="outline">Sign Out</Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

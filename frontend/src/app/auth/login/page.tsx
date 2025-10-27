@@ -1,34 +1,32 @@
-import LoginForm from "@/components/auth/LoginForm";
-import Link from "next/link";
-import React, { Suspense } from "react";
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { signIn } = useAuth();
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await signIn(email, password);
+      router.push('/profile');
+    } catch (error) {
+      alert('Login failed: ' + error.message);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Welcome Back
-          </h1>
-          <p className="text-gray-600">Sign in to continue to CurioHub</p>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <Suspense fallback={<div>Loading...</div>}>
-            <LoginForm />
-          </Suspense>
-
-          <div className="mt-6 text-center text-sm text-gray-600">
-            Don't have an account?{" "}
-            <Link
-              href="/auth/signup"
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
-              Sign up
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 space-y-4">
+      <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+      <Button type="submit">Login</Button>
+    </form>
   );
 }
