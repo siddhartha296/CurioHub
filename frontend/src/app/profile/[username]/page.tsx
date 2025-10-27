@@ -1,4 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/component";
+// import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import ContentGrid from "@/components/content/ContentGrid";
 import { User, Calendar, Bookmark } from "lucide-react";
@@ -6,14 +7,15 @@ import { User, Calendar, Bookmark } from "lucide-react";
 export default async function ProfilePage({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
   const supabase = createClient();
+  const { username } = await params;
 
   const { data: profile } = await supabase
     .from("profiles")
     .select("*")
-    .eq("username", params.username)
+    .eq("username", username)
     .single();
 
   if (!profile) {

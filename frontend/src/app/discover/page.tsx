@@ -1,6 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
+// import { createClient } from "@/lib/supabase/server";
 import ContentGrid from "@/components/content/ContentGrid";
 import { AlertCircle } from "lucide-react";
+import { createClient } from "@/lib/supabase/component";
 
 export default async function DiscoverPage() {
   const supabase = createClient();
