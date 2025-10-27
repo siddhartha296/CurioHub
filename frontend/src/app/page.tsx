@@ -3,6 +3,7 @@ import ContentGrid from "@/components/content/ContentGrid";
 import SourceFilter from "@/components/filters/SourceFilter";
 import TagFilter from "@/components/filters/TagFilter";
 import { createClient } from "@/lib/supabase/component";
+import React, { Suspense } from "react";
 
 export default async function Home() {
   const supabase = createClient();
@@ -38,8 +39,12 @@ export default async function Home() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Filters Sidebar */}
         <aside className="lg:w-64 space-y-6">
-          <SourceFilter />
-          <TagFilter />
+          <Suspense fallback={<div>Loading filters...</div>}>
+            {" "}
+            {/* Wrap filters */}
+            <SourceFilter />
+            <TagFilter />
+          </Suspense>
         </aside>
 
         {/* Main Content */}

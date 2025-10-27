@@ -1,5 +1,6 @@
 import LoginForm from "@/components/auth/LoginForm";
 import Link from "next/link";
+import React, { Suspense } from "react";
 
 export default function LoginPage() {
   return (
@@ -13,7 +14,9 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          <LoginForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <LoginForm />
+          </Suspense>
 
           <div className="mt-6 text-center text-sm text-gray-600">
             Don't have an account?{" "}
