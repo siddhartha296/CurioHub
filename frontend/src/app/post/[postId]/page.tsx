@@ -85,10 +85,15 @@ interface PostPageParams {
 }
 
 // Update the component's props type definition
-export default async function PostPage({ params }: { params: PostPageParams }) {
+export default async function PostPage({
+  params,
+}: {
+  params: Promise<PostPageParams>;
+}) {
   // Directly access postId from params, as Next.js resolves it for Server Components
   // No need to await params itself here. The async nature is for fetching data.
-  const postId = params.postId;
+  const resolvedParams = React.use(params);
+  const postId = resolvedParams.postId;
   const supabase = await createClient();
 
   // Add validation: Check if postId looks like a UUID before querying
