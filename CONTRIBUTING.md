@@ -130,7 +130,7 @@ CREATE POLICY "Users can insert own submissions"
 
 and the below in the sql editor after the above table creation 
 
----
+```sql
 -- ==================================================
 -- STEP 1: Allow users to create their own profile
 -- ==================================================
@@ -165,7 +165,7 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_user();
 
----
+```
 
 ## 5. Run the Project
 
