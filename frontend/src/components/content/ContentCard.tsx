@@ -39,6 +39,27 @@ export default function ContentCard({
   const [isBookmarked, setIsBookmarked] = useState(false);
   const supabase = createClient();
 
+  // Load initial bookmark (and optionally vote) status for the current user
+  useEffect(() => {
+    const checkStatus = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+      // Check bookmark
+      const { data: bookmarkData } = await supabase
+        .from("bookmarks")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .eq("submission_id", submission.id)
+        .maybeSingle();
+      setIsBookmarked(!!bookmarkData);
+    };
+    checkStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submission.id]);
+  // ---
+
   const handleVote = async () => {
     const {
       data: { user },

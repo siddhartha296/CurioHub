@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/component";
 import { notFound } from "next/navigation";
 import ContentGrid from "@/components/content/ContentGrid";
 import { User, Calendar, Bookmark } from "lucide-react";
+import Link from "next/link";
 
 export default async function ProfilePage({
   params,
@@ -63,6 +64,12 @@ export default async function ProfilePage({
                 <User className="w-4 h-4" />
                 {submissions?.length || 0} submissions
               </div>
+              <Link
+                href={`/profile/${username}/saved`}
+                className="text-blue-600 hover:text-blue-700"
+              >
+                View saved →
+              </Link>
             </div>
           </div>
         </div>
