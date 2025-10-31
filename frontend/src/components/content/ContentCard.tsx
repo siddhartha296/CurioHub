@@ -67,9 +67,10 @@ export default function ContentCard({
         .update({ upvotes: newUpvotes })
         .eq("id", submission.id);
     } else {
-      console.error("Error casting vote:", error);
       if (error.code === "23505") {
         alert("You've already voted on this post");
+      } else {
+        alert("Failed to record your vote. Please try again.");
       }
     }
   };
@@ -94,7 +95,6 @@ export default function ContentCard({
       if (!error) {
         setIsBookmarked(false);
       } else {
-        console.error("Error removing bookmark:", error);
         alert("Failed to remove bookmark. Please try again.");
       }
     } else {
@@ -105,7 +105,6 @@ export default function ContentCard({
       if (!error) {
         setIsBookmarked(true);
       } else {
-        console.error("Error adding bookmark:", error);
         if (error.code === "42501") {
           alert("Permission denied. Please make sure you're signed in.");
         } else if (error.code === "23505") {

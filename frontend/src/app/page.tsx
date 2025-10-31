@@ -5,7 +5,42 @@ import TagFilter from "@/components/filters/TagFilter";
 import { createClient } from "@/lib/supabase/component";
 import React, { Suspense } from "react";
 
-export default async function Home() {
+type SearchParams = {
+  source?: string | string[];
+  tags?: string | string[];
+};
+
+const parseSource = (sourceParam: SearchParams["source"]) => {
+  if (Array.isArray(sourceParam)) {
+    return sourceParam[0] ?? "all";
+  }
+
+  return sourceParam ?? "all";
+};
+
+const parseTags = (tagsParam: SearchParams["tags"]) => {
+  if (Array.isArray(tagsParam)) {
+    return tagsParam
+      .flatMap((value) => value.split(","))
+      .map((value) => value.trim())
+      .filter(Boolean);
+  }
+
+  if (!tagsParam) {
+    return [];
+  }
+
+  return tagsParam
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+};
+
+export default async function Home({
+  searchParams = {},
+}: {
+  searchParams?: SearchParams;
+}) {
   const supabase = createClient();
 
   const { data: submissions } = await supabase
@@ -23,6 +58,24 @@ export default async function Home() {
     .order("upvotes", { ascending: false })
     .limit(20);
 
+  const selectedSource = parseSource(searchParams.source);
+  const selectedTags = parseTags(searchParams.tags);
+
+  const filteredSubmissions = (submissions || []).filter((submission) => {
+    if (selectedSource !== "all" && submission.source_type !== selectedSource) {
+      return false;
+    }
+
+    if (selectedTags.length === 0) {
+      return true;
+    }
+
+    const submissionTagSlugs =
+      submission.submission_tags?.map((entry) => entry.tags.slug) ?? [];
+
+    return selectedTags.every((tag) => submissionTagSlugs.includes(tag));
+  });
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-12">
@@ -30,7 +83,7 @@ export default async function Home() {
           Welcome to CurioHub
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Discover the internet's most inspiring, educational, and mentally
+          Discover the internet&apos;s most inspiring, educational, and mentally
           enriching content. Curated by a community that values growth and
           curiosity.
         </p>
@@ -54,10 +107,10 @@ export default async function Home() {
               The Elevate Feed
             </h2>
             <div className="text-sm text-gray-600">
-              {submissions?.length || 0} inspiring posts
+              {filteredSubmissions.length} inspiring posts
             </div>
           </div>
-          <ContentGrid submissions={submissions || []} />
+          <ContentGrid submissions={filteredSubmissions} />
         </div>
       </div>
     </div>
