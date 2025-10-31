@@ -32,9 +32,10 @@ export default function ShareButton({ title, postId }: ShareButtonProps) {
         setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
       }
     } catch (error) {
-      console.error("Failed to share or copy:", error);
+      const message =
+        error instanceof Error ? error.message : "Failed to share or copy the link";
       // Fallback for older browsers or if clipboard fails
-      alert(`Link to share: ${shareUrl}`);
+      alert(`${message}. Share this link manually: ${shareUrl}`);
     }
   };
 
