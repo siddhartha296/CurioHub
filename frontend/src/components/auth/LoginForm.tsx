@@ -11,6 +11,7 @@ export default function LoginForm() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const [resetting, setResetting] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -35,6 +36,29 @@ export default function LoginForm() {
       alert(error.message || "Failed to sign in");
     } finally {
       setLoading(false);
+    }
+  };
+
+
+  const handleForgotPassword = async () => {
+    if (!formData.email) {
+      alert("Please enter your email first.");
+      return;
+    }
+
+    setResetting(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(formData.email, {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      });
+
+      if (error) throw error;
+
+      alert("Password reset email sent! Check your inbox.");
+    } catch (error: any) {
+      alert(error.message || "Failed to send reset email.");
+    } finally {
+      setResetting(false);
     }
   };
 
@@ -68,6 +92,16 @@ export default function LoginForm() {
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="••••••••"
         />
+        <div className="text-right mt-2">
+          <button
+            type="button"
+            onClick={handleForgotPassword}
+            disabled={resetting}
+            className="text-sm text-blue-600 hover:underline disabled:opacity-50"
+          >
+            {resetting ? "Sending..." : "Forgot password?"}
+          </button>
+        </div>
       </div>
 
       <button
