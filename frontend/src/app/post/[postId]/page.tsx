@@ -83,7 +83,6 @@ export default async function PostPage({
   // Validate UUID format
   const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
   if (!postId || !uuidRegex.test(postId)) {
-    console.error("Invalid Post ID format:", postId);
     notFound();
   }
 
@@ -112,13 +111,6 @@ export default async function PostPage({
     .single<SubmissionData>();
 
   if (submissionError || !submission) {
-    console.error(`Error fetching post ${postId}:`, {
-      error: submissionError,
-      hasData: !!submission,
-      errorCode: submissionError?.code,
-      errorMessage: submissionError?.message,
-      errorDetails: submissionError?.details,
-    });
     notFound();
   }
 

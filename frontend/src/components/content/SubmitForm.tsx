@@ -100,7 +100,6 @@ export default function SubmitForm() {
               tag_id: tag.id,
             });
           } else {
-            console.warn(`Tag with slug "${tagName}" not found.`);
             // Optionally, create the tag if it doesn't exist
           }
         });
@@ -109,8 +108,9 @@ export default function SubmitForm() {
       router.push("/discover");
       router.refresh(); // Refresh to ensure data updates if redirected immediately
     } catch (error) {
-      console.error("Error submitting:", error);
-      alert("Failed to submit content. Please try again.");
+      const message =
+        error instanceof Error ? error.message : "Please try again.";
+      alert(`Failed to submit content. ${message}`);
     } finally {
       setLoading(false);
     }
