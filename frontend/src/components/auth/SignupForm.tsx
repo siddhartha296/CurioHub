@@ -22,6 +22,18 @@ export default function SignupForm() {
     setLoading(true);
 
     try {
+
+      const { data: existingProfile } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("username", formData.username)
+        .maybeSingle();
+
+      if (existingProfile) {
+        alert("Username is already taken. Please choose another one.");
+        return;
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
